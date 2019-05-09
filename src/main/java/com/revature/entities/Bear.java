@@ -8,6 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 @Entity // Entity annotation tells ORMs that instances of this class are ORM-manageable entities
 @Table(name="bears") // Optional table configuration options
 public class Bear {

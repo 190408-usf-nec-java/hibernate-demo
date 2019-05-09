@@ -27,11 +27,31 @@ public class BearServlet extends HttpServlet {
 	}
 	
 	@Override
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String[] parts = request.getPathInfo().split("/");
+		int id = Integer.parseInt(parts[1]);
+		bearService.delete(id);
+	}
+	
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ObjectMapper om = new ObjectMapper();
 		Bear bear = om.readValue(request.getInputStream(), Bear.class);
 		
 		bear = bearService.saveBear(bear);
+		response.setStatus(201);
+		om.writeValue(response.getWriter(), bear);
+	}
+	
+	/**
+	 * If a persistent entity with the same identifier already exists in the session,
+	 * will throw {@link org.hibernate.NonUniqueObjectException}
+	 */
+	@Override
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		ObjectMapper om = new ObjectMapper();
+		Bear bear = om.readValue(request.getReader(), Bear.class);
+		bear = bearService.updateBear(bear);
 		om.writeValue(response.getWriter(), bear);
 	}
 	
