@@ -5,6 +5,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import com.revature.entities.Bear;
+
 public class HibernateUtil {
 	private static SessionFactory sessionFactory;
 	
@@ -14,7 +16,9 @@ public class HibernateUtil {
 		
 		// Loads configuration properties from a hibernate configuration location
 		// this includes: hibernate.cfg.xml
-		Configuration configuration = new Configuration().configure();
+		Configuration configuration = new Configuration()
+				.configure()
+				.addAnnotatedClass(Bear.class);
 		
 		// Compiles that configuration into a format that can be accepted by 
 		// the configuration to build a session factory

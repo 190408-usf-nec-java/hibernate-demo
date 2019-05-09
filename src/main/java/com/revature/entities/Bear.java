@@ -1,8 +1,27 @@
 package com.revature.entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity // Entity annotation tells ORMs that instances of this class are ORM-manageable entities
+@Table(name="bears") // Optional table configuration options
 public class Bear {
+	
+	@Id // Indicates a primary key field
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Creates fields as SERIAL in pg
+										// and allows the table to provide values itself
 	private int id;
+	
+	@Column(length = 20, nullable=false) // Optional annotation for providing column level configuration
 	private String breed;
+	
+	@Transient // Tells ORM not to store this data, 
+				//		no column will be created, data will not be persisted.
 	private double kilograms;
 	private String location;
 	private String favoriteFood;
