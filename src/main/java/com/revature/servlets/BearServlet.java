@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.revature.entities.Bear;
 import com.revature.services.BearService;
 import com.revature.util.HibernateUtil;
@@ -73,6 +74,7 @@ public class BearServlet extends HttpServlet {
 	private void handleGetBear(HttpServletResponse response, int id) throws IOException {
 		Bear bear = this.bearService.getBearById(id);
 		ObjectMapper om = new ObjectMapper();
+		om.registerModule(new Hibernate5Module());
 		om.writeValue(response.getWriter(), bear);
 	}
 	

@@ -11,8 +11,18 @@
   	<load-on-startup>0</load-on-startup>
   </servlet>
   
+  <servlet>
+  	<servlet-name>cave</servlet-name>
+  	<servlet-class>com.revature.servlets.CaveServlet</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
   	<servlet-name>bear</servlet-name>
   	<url-pattern>/bears/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>cave</servlet-name>
+  	<url-pattern>/caves/*</url-pattern>
   </servlet-mapping>
 </web-app>

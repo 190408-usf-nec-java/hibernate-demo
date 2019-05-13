@@ -47,10 +47,10 @@ public class BearService {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		try (Session session = sf.openSession()) {
 			Transaction tx = session.beginTransaction();
-			Bear retrievedBear = session.get(Bear.class, bear.getId());
+//			Bear retrievedBear = session.get(Bear.class, bear.getId());
 
 			session.update(bear);
-			bear.setFavoriteFood("Ice Cream");
+//			bear.setFavoriteFood("Ice Cream");
 			tx.commit();
 		}
 		return bear;
@@ -102,7 +102,7 @@ public class BearService {
 			Transaction tx = session.beginTransaction();
 			// Save - saves 'transient' entity returning an serializable identifier
 			// Persist - JPA - saves entity, making it 'persistent'
-			session.save(bear);
+			session.persist(bear);
 			logger.warn("Setting favorite food");
 			bear.setFavoriteFood("Penguins");
 			logger.warn("Committing");

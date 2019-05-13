@@ -6,6 +6,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import com.revature.entities.Bear;
+import com.revature.entities.Cave;
+import com.revature.entities.HoneyJar;
 
 public class HibernateUtil {
 	private static SessionFactory sessionFactory;
@@ -18,7 +20,9 @@ public class HibernateUtil {
 		// this includes: hibernate.cfg.xml
 		Configuration configuration = new Configuration()
 				.configure()
-				.addAnnotatedClass(Bear.class);
+				.addAnnotatedClass(Bear.class)
+				.addAnnotatedClass(Cave.class)
+				.addAnnotatedClass(HoneyJar.class);
 		
 		// Compiles that configuration into a format that can be accepted by 
 		// the configuration to build a session factory
