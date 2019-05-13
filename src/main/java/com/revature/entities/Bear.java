@@ -19,37 +19,45 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
-@Entity // Entity annotation tells ORMs that instances of this class are ORM-manageable entities
-@Table(name="bears") // Optional table configuration options
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer" })
+@Entity // Entity annotation tells ORMs that instances of this class are ORM-manageable
+		// entities
+@Table(name = "bears") // Optional table configuration options
 public class Bear {
-	
+
 	@Id // Indicates a primary key field
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // Creates fields as SERIAL in pg
-										// and allows the table to provide values itself
+	// and allows the table to provide values itself
 	private int id;
-	
-	@Column(length = 20, nullable=false) // Optional annotation for providing column level configuration
+
+	@Column(length = 20, nullable = false) // Optional annotation for providing column level configuration
 	private String breed;
-	
-	@Transient // Tells ORM not to store this data, 
-				//		no column will be created, data will not be persisted.
+
+	@Transient // Tells ORM not to store this data,
+				// no column will be created, data will not be persisted.
 	private double kilograms;
 	private String location;
 	private String favoriteFood;
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="cave_id")
+
+	@JsonIgnoreProperties("occupants")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "cave_id")
 	private Cave cave;
-	
-	@OneToOne(cascade=CascadeType.PERSIST)
-	@JoinColumn(name="honey_jar_id")
+
+	@OneToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "honey_jar_id")
 	private HoneyJar honeyJar;
 
+	@JsonIgnoreProperties("cubs")
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name="bear_cubs",
-				joinColumns= {@JoinColumn(name="parent_id")},
-				inverseJoinColumns= {@JoinColumn(name="cub_id")})
+	@JoinTable(name = "bear_cubs", joinColumns = { @JoinColumn(name = "cub_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "parent_id") })
+	List<Bear> parents;
+
+	@JsonIgnoreProperties("parents")
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "bear_cubs", joinColumns = { @JoinColumn(name = "parent_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "cub_id") })
 	List<Bear> cubs;
 
 	public int getId() {
@@ -74,6 +82,14 @@ public class Bear {
 
 	public void setKilograms(double kilograms) {
 		this.kilograms = kilograms;
+	}
+
+	public List<Bear> getParents() {
+		return parents;
+	}
+
+	public void setParents(List<Bear> parents) {
+		this.parents = parents;
 	}
 
 	public String getLocation() {
@@ -201,7 +217,5 @@ public class Bear {
 	public Bear() {
 		super();
 	}
-	
-	
-	
+
 }

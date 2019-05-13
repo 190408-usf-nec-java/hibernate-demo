@@ -22,6 +22,12 @@ public class BearServlet extends HttpServlet {
 	private Logger logger = Logger.getRootLogger();
 	
 	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setHeader("content-type", "application/json");
+		super.service(req, resp);
+	}
+	
+	@Override
 	public void init() throws ServletException {
 		HibernateUtil.configure();
 		super.init();
