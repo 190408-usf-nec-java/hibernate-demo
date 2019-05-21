@@ -67,6 +67,24 @@ public class BearServlet extends HttpServlet {
 		logger.warn("Get request received");
 		// localhost:8080/bears --> Retrieve a list of bears
 		// localhost:8080/bears/2 --> Asking for Bear with id 2
+		// localhost:8080/bears?favoriteFood=something --> Asking for a list of bears whose
+				// favorite food is 'something'
+		// localhost:8080/bears?location=somewhere --> asking for a list of bears whose
+				// location is 'somewhere'
+		
+		String favoriteFood = request.getParameter("favoriteFood");
+		String location = request.getParameter("location");
+		
+		if (favoriteFood != null) {
+			getBearByFavoriteFood(response, favoriteFood);
+			return;
+		}
+		
+		if (location != null) {
+			getBearByLocation(response, location);
+			return;
+		}
+		
 		String[] parts = request.getPathInfo().split("/");
 		if (parts.length > 1) {
 			logger.warn("Parts greater than 1");
@@ -77,6 +95,18 @@ public class BearServlet extends HttpServlet {
 		}
 	}
 	
+	private void getBearByLocation(HttpServletResponse response, String location) throws IOException {
+		List<Bear> bears = bearService.getBearsByLocation(location);
+		ObjectMapper om = new ObjectMapper();
+		om.writeValue(response.getWriter(), bears);
+	}
+
+	private void getBearByFavoriteFood(HttpServletResponse response, String favoriteFood) throws IOException {
+		List<Bear> bears = bearService.getBearsByFavoriteFood(favoriteFood);
+		ObjectMapper om = new ObjectMapper();
+		om.writeValue(response.getWriter(), bears);
+	}
+
 	private void handleGetBear(HttpServletResponse response, int id) throws IOException {
 		Bear bear = this.bearService.getBearById(id);
 		ObjectMapper om = new ObjectMapper();

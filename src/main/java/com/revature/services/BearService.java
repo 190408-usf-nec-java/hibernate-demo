@@ -2,11 +2,17 @@ package com.revature.services;
 
 import java.util.List;
 
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.type.StringType;
 
 import com.revature.entities.Bear;
 import com.revature.util.HibernateUtil;
@@ -125,5 +131,42 @@ public class BearService {
 			tx.commit();
 		}
 	}
+	
+	public List<Bear> getBearsByFavoriteFood(String food) {
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		
+		try(Session session = sf.openSession()) {
+			// Select by entity
+			String hql = "select b from Bear b where b.favoriteFood like :food";
+			List<Bear> list = session.createQuery(hql, Bear.class)
+					.setParameter("food", food, StringType.INSTANCE)
+					.list();
+			return list;
+		}
+	}
+	
+	public List<Bear> getBearsByLocation(String location) {
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		try(Session session = sf.openSession()) {
+			CriteriaBuilder cb = session.getCriteriaBuilder();
+			CriteriaQuery<Bear> bearQuery = cb.createQuery(Bear.class);
+			Root<Bear> root = bearQuery.from(Bear.class);
+			
+			bearQuery.select(root)
+				.where(cb.equal(root.get("location"), location));
+			
+			Query query = session.createQuery(bearQuery);
+			List<Bear> results = (List<Bear>) query.getResultList();
+			return results;
+		}
+	}
+	/**
+	 * HQL - Hibernate Query Language - Hibernate Query Language is similar to SQL, but largely
+	 * 			relies on class and field names (Java) rather than the underlying SQL names. 
+	 * 			Further, it supports named parameters, and an abbreviated syntax.
+	 * 
+	 * Criteria - Fully object-oriented method of querying the database. 
+	 * 
+	 */
 
 }
